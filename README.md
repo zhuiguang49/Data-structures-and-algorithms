@@ -1,3 +1,19 @@
 # 数据结构与算法 2024秋 课程仓库
 ## Lab 1
-hello目录下编写源文件hello.cpp，Makefile，make后可得到可执行文件hello，运行后显示"Hello World!"
+
+hello目录下编写源文件hello.cpp，Makefile，make后可得到可执行文件hello，运行后显示"Hello World!"。
+
+## Lab2 (Chicken)
+
+1. **深度复制与连续赋值**：
+
+* 复制构造函数和赋值操作符实现深度复制，避免多个对象共享同一`name`指针，避免内存冲突。
+* 赋值操作符返回`*this`，允许连续赋值（c1 = c2 =c3），并且在赋值前检查自我赋值，防止自我赋值引发的错误。
+
+
+2. **内存管理**：
+
+* 使用`delete[] name`,并在`setname`和赋值操作符中释放旧的内存，分配新的空间，防止内存泄漏。
+
+3. **正确使用`const`**：
+* 使用`const`关键字保护`getName`和`getAge`，保证这些函数不会被修改对象状态，并且确保返回左值满足要求。
