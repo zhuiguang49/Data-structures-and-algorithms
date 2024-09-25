@@ -3,7 +3,7 @@
 
 hello目录下编写源文件hello.cpp，Makefile，make后可得到可执行文件hello，运行后显示"Hello World!"。
 
-## Lab2 (Chicken)
+## Lab 2 (Chicken)
 
 1. **深度拷贝与连续赋值：**
 
