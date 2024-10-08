@@ -25,3 +25,27 @@ hello目录下编写源文件hello.cpp，Makefile，make后可得到可执行文
 截图如下
 
 ![无内存泄漏](./images/noPossibleLeaks.png)
+
+## Lab 3 Linkedlist
+
+1. **`getCurrentVal()`：**
+- 当`currentPos`不为`nullptr`时返回当前节点的值，如果`currentPos`为`nullptr`，抛出异常。
+
+2. **`setCurrentVal(T &_val)`：**
+- 确保`currentPos`不为`nullptr`时允许修改数据，如若为`nullptr`则抛出异常。
+
+3. **`isEmpty()`：**
+- 修改了老妖的拼写错误（手动狗头）。
+- 检查链表是否为空，返回`true`表示链表为空，`false`表示链表不为空。
+
+4. **`insert(T _val)`：**
+- 如果`currentPos`为`nullptr`，表示链表为空，将元素插入为新的头结点，并更新`currentPos`指向新插入的节点；若`currentPos`不为空，则在其后插入新节点。
+- 插入后，链表的大小增加。
+
+5. **`remove()`：**
+>`remove()`函数原先删除的是`currentPos`后面的元素而非`currentPos`指向的当前元素，这不符合实际工作的需求，我们将其改为删除`currentPos`**指向的元素本身**。
+- 若`currentPos`是链表的头结点，直接更新`head`为`currentPos->next`。
+- 如若`currentPos`不是链表的头结点，遍历链表找到`currentPos`前面的节点，将`next`指向`currentPos->next`。
+- 删除`currentPos`节点，并将`currentPos`更新为其后的节点。
+- 删除后，链表的大小减小。
+
