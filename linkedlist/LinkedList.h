@@ -1,6 +1,6 @@
 #include <initializer_list>
 #include <iostream>
-
+#include <iomanip>
 
 template <typename T>
 class SingleLinkedList
@@ -26,7 +26,7 @@ public:
     /// 返回当前位置的值
     T getCurrentVal() const;
     /// 设置当前位置的值
-    void setCurrentVal(T &_val);
+    void setCurrentVal(const T &_val);
     /// 如果链表为空，返回 true；否则返回 false
     bool isEmpty() const;
 
@@ -42,7 +42,7 @@ public:
 
     /// 在 currentPos 后面插入一个元素，数据为 _val
     void insert(T _val);
-    /// 删除 currentPos 后面的元素
+    /// 删除 currentPos 所在的元素
     void remove();
 };
 
@@ -57,7 +57,7 @@ T SingleLinkedList<T>::getCurrentVal() const
 
 /// 设置当前位置的值
 template <typename T>
-void SingleLinkedList<T>::setCurrentVal(T &_val)
+void SingleLinkedList<T>::setCurrentVal(const T &_val)
 {
     if (currentPos)
         currentPos->data = _val;
@@ -77,9 +77,13 @@ template <typename T>
 void SingleLinkedList<T>::insert(T _val)
 {
     Node *newNode = new Node(_val);
-    if (currentPos == nullptr)
+    if (isEmpty()) // 如果链表为空，插入到头部
     {
-        // 如果currentPos为空，插入到头节点前
+        head = newNode;
+        currentPos = head;
+    }
+    else if (currentPos == nullptr)
+    {
         newNode->next = head;
         head = newNode;
         currentPos = head; // 更新 currentPos 到新的 head
@@ -89,39 +93,45 @@ void SingleLinkedList<T>::insert(T _val)
         // 插入到 currentPos 后面
         newNode->next = currentPos->next;
         currentPos->next = newNode;
+        currentPos = newNode; // 更新 currentPos 到新插入的节点
     }
     ++size;
 }
 
-/// 删除 currentPos 后面的元素
+/// 删除 currentPos 所在的元素
 template <typename T>
 void SingleLinkedList<T>::remove()
 {
-    if (currentPos == nullptr || head == nullptr) {
-        return;  // 如果链表为空或 currentPos 为 nullptr，直接返回
+    if (currentPos == nullptr || head == nullptr)
+    {
+        return; // 如果链表为空或 currentPos 为 nullptr，直接返回
     }
 
-    if (currentPos == head) {
+    if (currentPos == head)
+    {
         // 如果 currentPos 是头节点，删除头节点
-        Node* temp = head;
-        head = head->next;  // 更新 head 指向下一个节点
+        Node *temp = head;
+        head = head->next; // 更新 head 指向下一个节点
         delete temp;
-        currentPos = head;  // 更新 currentPos 指向新的头节点
-    } else {
+        currentPos = head; // 更新 currentPos 指向新的头节点
+    }
+    else
+    {
         // 查找 currentPos 前面的节点
-        Node* prev = head;
-        while (prev->next != currentPos) {
+        Node *prev = head;
+        while (prev->next != currentPos)
+        {
             prev = prev->next;
         }
         // 删除 currentPos
         prev->next = currentPos->next;
         delete currentPos;
-        currentPos = prev->next;  // 更新 currentPos 为删除节点后的下一个节点
+        currentPos = prev->next; // 更新 currentPos 为删除节点后的下一个节点
     }
-
-    --size;  // 更新链表大小
+    --size; // 更新链表大小
 }
 
+/// 查找元素，找到则将 currentPos 更新为该元素的位置
 template <typename T>
 bool SingleLinkedList<T>::find(const T &_val)
 {
@@ -138,12 +148,14 @@ bool SingleLinkedList<T>::find(const T &_val)
     return false;
 }
 
+/// 获取链表大小
 template <typename T>
 int SingleLinkedList<T>::getSize() const
 {
     return size;
 }
 
+/// 使用 initializer_list 初始化链表
 template <typename T>
 SingleLinkedList<T>::SingleLinkedList(std::initializer_list<T> _l)
 {
@@ -180,26 +192,33 @@ template <typename T>
 void SingleLinkedList<T>::printList() const
 {
     Node *p = head;
-    while (p != nullptr)
-    {
-        std::cout << p->data << "\t";
+    while (p != nullptr) {
+        if constexpr (std::is_floating_point_v<T>) {
+            // 如果是浮点数，控制输出精度为1位小数
+            std::cout << std::fixed << std::setprecision(1) << p->data << "\t";
+        } else {
+            std::cout << p->data << "\t";
+        }
         p = p->next;
     }
     std::cout << std::endl;
 }
 
+/// 析构函数
 template <typename T>
 SingleLinkedList<T>::~SingleLinkedList()
 {
     _emptyList();
-};
+}
 
+/// 拷贝构造函数
 template <typename T>
 SingleLinkedList<T>::SingleLinkedList(const SingleLinkedList<T> &_l)
 {
     _copy(_l);
 }
 
+/// 清空链表
 template <typename T>
 void SingleLinkedList<T>::emptyList()
 {
@@ -209,6 +228,7 @@ void SingleLinkedList<T>::emptyList()
     size = 0;
 }
 
+/// 赋值操作符重载
 template <typename T>
 SingleLinkedList<T> &SingleLinkedList<T>::operator=(const SingleLinkedList<T> &_l)
 {
@@ -219,6 +239,7 @@ SingleLinkedList<T> &SingleLinkedList<T>::operator=(const SingleLinkedList<T> &_
     return *this;
 }
 
+/// 拷贝链表
 template <typename T>
 void SingleLinkedList<T>::_copy(const SingleLinkedList<T> &_l)
 {
