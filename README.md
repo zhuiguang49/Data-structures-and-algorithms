@@ -49,3 +49,7 @@ hello目录下编写源文件hello.cpp，Makefile，make后可得到可执行文
 - 如若`currentPos`不是链表的头结点，删除该节点并更新`currentPos`为其后的节点。
 - 删除后，链表的大小减小
 
+**修改了remove()函数后的输出：**
+
+![无内存泄漏](./images/output_lab3.png)
+
