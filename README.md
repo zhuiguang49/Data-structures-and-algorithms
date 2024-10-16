@@ -53,3 +53,21 @@ hello目录下编写源文件hello.cpp，Makefile，make后可得到可执行文
 
 ![无内存泄漏](./images/output_lab3.png)
 
+## Lab4 List
+
+1. **`List.h`**
+
+- 在 `List.h` 中，添加了迭代器**后向遍历**（`--`）的实现，使得`List`支持使用迭代器进行双向遍历。
+
+2. **`List.cpp`**<br>
+在`List.cpp`中，我们编写了测试程序，覆盖以下操作验证`List`类的正确性
+- 元素插入（`push_back`、`push_front`）
+- 元素删除（`pop_back`、`pop_front`、`erase`）
+- 前向和后向迭代器遍历
+- 拷贝构造和移动构造
+- 拷贝赋值和移动赋值
+- 链表的清空操作
+
+3. **无内存泄漏：**<br>
+我们使用`Valgrind`工具检测确保程序无内存泄漏，截图如下：
+![无内存泄漏](./List/内存无泄漏.png)
