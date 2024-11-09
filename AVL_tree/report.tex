@@ -1,0 +1,93 @@
+\documentclass[UTF8]{ctexart}
+\usepackage{geometry, CJKutf8}
+\geometry{margin=1.5cm, vmargin={0pt,1cm}}
+\setlength{\topmargin}{-1cm}
+\setlength{\paperheight}{29.7cm}
+\setlength{\textheight}{25.3cm}
+
+% useful packages.
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{fancyhdr}
+\usepackage{layout}
+\usepackage{listings}
+\usepackage{float, caption}
+
+\lstset{
+    basicstyle=\ttfamily, basewidth=0.5em
+}
+
+% some common command
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\avg}[1]{\left\langle #1 \right\rangle}
+\newcommand{\difFrac}[2]{\frac{\dif #1}{\dif #2}}
+\newcommand{\pdfFrac}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\OFL}{\mathrm{OFL}}
+\newcommand{\UFL}{\mathrm{UFL}}
+\newcommand{\fl}{\mathrm{fl}}
+\newcommand{\op}{\odot}
+\newcommand{\Eabs}{E_{\mathrm{abs}}}
+\newcommand{\Erel}{E_{\mathrm{rel}}}
+
+\begin{document}
+
+\pagestyle{fancy}
+\fancyhead{}
+\lhead{张广, 3230105121}
+\chead{数据结构与算法第六次作业}
+\rhead{November.9th, 2024}
+
+
+
+\section{实现原理}
+
+此报告叙述了AVL树删除节点操作的实现方法，我们在执行删除操作时不仅需要保持二叉搜索树的性质，并且还要按AVL树的方式保持平衡。
+
+\subsection{删除策略}
+
+我们采用递归实现删除操作，有以下三种情况：
+
+\begin{enumerate}
+    \item 待删除节点为叶节点：直接删除
+    \item 待删除节点有一个子节点：用子节点替换当前节点
+    \item 待删除节点有两个子节点：用右子树中的最小值替换当前节点，并删除最小值节点
+\end{enumerate}
+
+\subsection{平衡维护}
+
+删除节点后，我们自底向上更新节点高度以保持AVL树的平衡。主要步骤如下：
+
+\begin{enumerate}
+    \item 更新节点高度：$height = max(leftHeight, rightHeight) + 1$
+    \item 计算平衡因子：$balance = leftHeight - rightHeight$
+    \item 根据平衡因子进行旋转操作：
+    \begin{itemize}
+        \item 左左情况（balance > 1）：右旋
+        \item 左右情况（balance > 1）：先左旋后右旋
+        \item 右右情况（balance < -1）：左旋
+        \item 右左情况（balance < -1）：先右旋后左旋
+    \end{itemize}
+\end{enumerate}
+
+\section{关键代码实现}
+
+删除操作的核心在于平衡的维护。每次删除节点后，我们都需要更新受影响路径上的节点高度，并检查是否需要重新平衡。
+重平衡过程的实现步骤如下：
+
+\begin{itemize}
+    \item 调用updateHeight更新节点高度
+    \item 计算平衡因子
+    \item 根据平衡因子的值确定是否需要旋转以及使用哪种旋转方式
+    \item 旋转完成后重新更新受影响节点的高度
+\end{itemize}
+
+为了提高效率，本实现在递归返回过程中进行平衡维护，这样可以保证每个节点最多只需要调整一次。同时我们按照要求使用移动而非复制来处理节点值的替换，减少了不必要的对象拷贝。
+
+
+\end{document}
+

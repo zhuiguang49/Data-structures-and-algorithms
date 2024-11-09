@@ -86,12 +86,66 @@ hello目录下编写源文件hello.cpp，Makefile，make后可得到可执行文
     - 删除只有一个子节点的节点，验证树的结构更新正确。
     - 删除有两个子节点的节点，确保 `remove` 函数能正确替换节点。
     - 删除根节点，包括根节点有多个子节点的情况。
-    - 重复删除同一节点，测试函数是否能正确处理已不存在的节点。
-
-3. `Makefile`的使用
-
+    - 重复删除同一节点，测试函数是 
     我们编写了一个 `Makefile`，提供了以下两种操作：
    - `make run`：编译 `main.cpp` 并运行程序，输出测试结果。
    - `make report`：使用 `xelatex` 编译实验报告 `report.tex`，生成 `report.pdf` 文件。
 
     此外，可以使用 `make clean` 清理临时文件，或使用 `make distclean` 完全清理生成的文件。
+
+## Lab6 AVLTree_remove
+
+### 实现方案
+
+本次实现主要围绕AVL树的平衡维护，核心在于正确处理删除操作后的再平衡：
+
+1. 节点存储结构
+```cpp
+struct BinaryNode {
+    Comparable element;
+    BinaryNode *left;
+    BinaryNode *right;
+    int height;  // 新增高度字段
+};
+```
+
+2. 高度维护
+```cpp
+// 获取节点高度
+int height(BinaryNode *t) const {
+    return t == nullptr ? 0 : t->height;
+}
+
+// 更新节点高度
+void updateHeight(BinaryNode *t) {
+    if (t != nullptr) {
+        t->height = std::max(height(t->left), height(t->right)) + 1;
+    }
+}
+```
+
+3. AVL树的删除操作
+- 先按二叉搜索树的方式删除节点
+- 删除后自底向上更新节点高度
+- 检查平衡因子进行必要的旋转
+- 通过递归返回保持树的平衡性
+
+4. 平衡维护
+```cpp
+int getBalance(BinaryNode *t) const {
+    return t == nullptr ? 0 : height(t->left) - height(t->right);
+}
+```
+
+### Makefile使用说明
+
+#### 基本命令
+```bash
+make        # 编译程序
+make run    # 运行程序
+make clean  # 清理编译文件，保留PDF
+make report # 生成PDF报告
+make time   # 测试运行时间
+```
+>可能会遇到栈溢出的问题，使用前建议设置 `ulimit -s unlimited`，该命令只对当前shell有效
+
