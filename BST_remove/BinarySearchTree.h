@@ -124,6 +124,10 @@ private:
     }
 
     BinaryNode *detachMin(BinaryNode *&t) {
+        if(t = nullptr){
+            return nullptr;
+        }
+
         if (t->left == nullptr) {
             BinaryNode *minNode = t;
             t = t->right;  // Reconnect parent node to the right child of minNode
