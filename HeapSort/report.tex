@@ -1,0 +1,133 @@
+\documentclass[UTF8]{ctexart}
+\usepackage{geometry, CJKutf8}
+\geometry{margin=1.5cm, vmargin={0pt,1cm}}
+\setlength{\topmargin}{-1cm}
+\setlength{\paperheight}{29.7cm}
+\setlength{\textheight}{25.3cm}
+
+% useful packages.
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{fancyhdr}
+\usepackage{layout}
+\usepackage{listings}
+\usepackage{float, caption}
+
+\lstset{
+    basicstyle=\ttfamily, basewidth=0.5em
+}
+
+% some common command
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\avg}[1]{\left\langle #1 \right\rangle}
+\newcommand{\difFrac}[2]{\frac{\dif #1}{\dif #2}}
+\newcommand{\pdfFrac}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\OFL}{\mathrm{OFL}}
+\newcommand{\UFL}{\mathrm{UFL}}
+\newcommand{\fl}{\mathrm{fl}}
+\newcommand{\op}{\odot}
+\newcommand{\Eabs}{E_{\mathrm{abs}}}
+\newcommand{\Erel}{E_{\mathrm{rel}}}
+
+\pagestyle{fancy}
+\fancyhead{}
+\lhead{张广, 3230105121}
+\chead{数据结构与算法第七次作业}
+\rhead{November.28th, 2024}
+
+\begin{document}
+
+\section{引言}
+堆排序（HeapSort）是一种基于堆结构的高效排序算法。通过构建大顶堆或小顶堆，并反复执行堆化操作，可以实现时间复杂度为 $O(n \log n)$ 的排序。该报告详细记录了本人堆排序的实现过程、测试方法、性能对比以及算法分析。
+
+\section{算法描述}
+\subsection{整体思路}
+本人对于堆排序设计的思路如下：
+\begin{enumerate}
+    \item 将输入数组构建为\textbf{大顶堆}，此时最大元素位于堆顶。
+    \item 将堆顶元素与堆尾元素交换，将对顶元素（最大元素）放在了数组的末尾，实现了单个元素的正确排序。
+    \item 对堆顶元素执行堆化操作（\texttt{siftDown}），恢复堆的性质。
+    \item 重复上述步骤，每一次循环可以将单个元素正确排序，而直至堆的未排序长度变为1的时候，就完成了从小到大的排序。
+\end{enumerate}
+
+\subsection{必要函数的功能}
+本次实现的堆排序主要包括以下两个函数：
+\begin{itemize}
+    \item \texttt{siftDown}: 用于堆化操作。它从节点i开始，从顶至底进行堆化操作，恢复堆的性质。
+    \item \texttt{heapSort}: 堆排序的主函数，首先完成建堆操作，从最后一个非叶结点开始向前遍历至根节点，完成堆化操作；然后交换根节点和最右叶节点，并以根节点为起点从顶至底进行堆化，然后循环这样的过程最终完成堆排序。
+\end{itemize}
+
+\subsection{实现细节}
+在实现中，我采取了如下策略：
+\begin{enumerate}
+    \item \textbf{构建大顶堆：} 从最后一个非叶节点开始向上进行堆化操作，时间复杂度为 $O(n)$。
+    \item \textbf{堆化操作：} 利用 \texttt{siftDown} 函数对当前堆顶元素进行调整，直到满足堆的性质。
+    \item \textbf{原地排序：} 在堆排序中，不需要额外的存储空间，直接在输入数组上完成操作。
+\end{enumerate}
+
+\section{测试流程}
+
+\subsection{测试方法}
+\begin{enumerate}
+    \item 随机生成 4 种长度为 $10^6$ 的测试序列，包括随机序列、有序序列、逆序序列和部分重复序列。
+    \item 调用自实现的 \texttt{heapSort} 和标准库的 \texttt{std::sort\_heap()} 对各序列分别进行排序。
+    \item 使用 \texttt{chrono} 记录每次排序的时间，并验证排序结果的正确性。
+    \item 通过 Valgrind 工具检测内存泄漏，确保程序运行稳定。
+\end{enumerate}
+
+\section{性能分析}
+\subsection{测试概述}
+按要求针对以下四种序列对堆排序进行了测试：
+\begin{enumerate}
+    \item \textbf{随机序列}：元素为随机生成的整数。
+    \item \textbf{有序序列}：元素已经按升序排列。
+    \item \textbf{逆序序列}：元素按降序排列。
+    \item \textbf{部分重复序列}：包含大量重复元素。
+\end{enumerate}
+
+所有序列长度均为 $10^6$，并与标准库的 \texttt{std::sort\_heap()} 进行了性能对比。
+
+\subsection{测试结果}
+以下是堆排序与 \texttt{std::sort\_heap()} 的性能测试结果（单位：秒）：
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|c|c|c|}
+    \hline
+    \textbf{序列类型} & \textbf{堆排序时间 (s)} & \textbf{std::sort\_heap 时间 (s)} \\ \hline
+    随机序列        & 0.538                     & 0.310                             \\ \hline
+    有序序列        & 0.427                     & 0.249                             \\ \hline
+    逆序序列        & 0.457                     & 0.271                             \\ \hline
+    部分重复序列    & 0.533                     & 0.336                             \\ \hline
+    \end{tabular}
+    \caption{堆排序与 std::sort\_heap 的性能对比}
+\end{table}
+
+\section{时间复杂度与效率差异分析}
+\subsection{时间复杂度分析}
+堆排序的时间复杂度分为两部分：
+\begin{itemize}
+    \item \textbf{构建大顶堆：} 对每个非叶节点执行堆化操作，总复杂度为 $O(n)$。
+    \item \textbf{堆化与排序：} 从堆中提取最大元素的时间复杂度为O(logn)，共循环n-1轮，故提取最大元素（包括堆化操作）的时间复杂度为$O(nlogn)$。
+\end{itemize}
+
+所以总的时间复杂度为$O(n)+O(nlogn)=O(nlogn)$。
+
+\subsection{与 \texttt{std::sort\_heap()} 的效率差异}
+从测试结果可以看出，标准库的 \texttt{std::sort\_heap()} 明显快于我实现的 \texttt{heapSort}，我个人认为原因如下：
+\begin{enumerate}
+    \item \textbf{底层优化：} 标准库的实现经过高度优化，可能使用了硬件加速或并行化操作，而我的实现只针对通用性，没有针对性能进行优化。
+    \item \textbf{缓存命中率：} 标准库对内存访问模式进行了优化，减少了缓存未命中，而我的实现在交换和堆化操作中可能导致更多的缓存未命中。
+    \item \textbf{函数调用开销：} 我的实现中使用了较多的递归或循环，可能带来额外的函数调用开销。
+\end{enumerate}
+
+
+\section{结论}
+我实现的堆排序性能较标准库的 \texttt{std::sort\_heap()}有一定的性能差异，但时间复杂度符合理论预期，且能够正确处理多种类型的输入序列，感觉还行（手动狗头）
+
+\end{document}
+
