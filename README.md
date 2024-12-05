@@ -1,4 +1,57 @@
 # 数据结构与算法 2024秋 课程仓库
+
+## Big Project：四则混合运算器
+
+### **项目简介**
+本项目实现了一个功能全面的四则混合运算表达式求值器，支持解析中缀表达式并计算结果。程序能够正确处理多种输入格式，并对非法表达式进行准确检测和处理。
+
+### **功能特性**
+1. **支持的运算**：
+  - 四则运算（加 `+`、减 `-`、乘 `*`、除 `/`）。
+  - 括号嵌套优先级解析。
+  - 小数、负数和科学计数法的运算（如 `1.5+2.25`, `1.2e3-1e2`）。
+  - 
+2. **错误检测**：
+  - 括号匹配错误（如 `(1+2`）。
+  - 非法字符检测（如 `abc+1`）。
+  - 连续运算符检测（如 `1++2`）。
+  - 零除检测（如 `1/0`）。
+3. **结果处理**：
+  - 合法表达式输出计算结果。
+  - 非法表达式返回 `"ILLEGAL"`。
+4. **用户交互**：
+  - 支持通过终端输入表达式进行实时计算。
+
+
+### **编译与运行**
+1. 使用 `make` 命令编译程序：编译完成后会生成可执行文件 `evaluator`。
+
+- 程序将自动运行预定义的测试用例，并输出每个表达式的结果。
+- 程序支持交互模式，可输入自定义表达式进行计算，输入 `exit` 可退出程序。
+
+2. 使用 `make report` 命令生成 PDF 格式的实验报告。
+
+3. 使用 `make clean` 清理生成的中间文件，但保留 PDF 报告。
+
+### **示例运行结果**
+运行 `evaluator` 后的部分输出示例：
+```plaintext
+Running predefined test cases:
+
+Expression: 1+2 -> Result: 3.000000
+Expression: 1-2 -> Result: -1.000000
+Expression: 1/0 -> Result: ILLEGAL
+Expression: 1+-2.1 -> Result: -1.100000
+Expression: (1+2)*3 -> Result: 9.000000
+
+Interactive mode:
+
+Enter an expression (or type 'exit' to quit): 1.2e3+1e-3
+Result: 1200.000001
+
+Enter an expression (or type 'exit' to quit): exit
+```
+
 ## Lab 1
 
 hello目录下编写源文件hello.cpp，Makefile，make后可得到可执行文件hello，运行后显示"Hello World!"。
