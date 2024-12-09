@@ -44,48 +44,12 @@
 
 \section{实验背景}
 本实验的目标是实现一个四则混合运算器，支持解析中缀表达式并对其进行求值。程序需要满足以下功能要求：
-
-\section{支持的功能与规则}
-本运算器遵循以下规则，并支持以下功能：
-
-\subsection{运算规则}
-\begin{enumerate}
-    \item **优先级规则**：
-        \begin{itemize}
-            \item 运算优先级从高到低依次为：
-                \begin{enumerate}
-                    \item 括号 `()` 内的运算优先。
-                    \item 乘法 `*` 和除法 `/` 优先于加法 `+` 和减法 `-`。
-                    \item 同优先级从左至右顺序计算。
-                \end{enumerate}
-            \item 括号嵌套时，最内层括号优先计算。
-        \end{itemize}
-    \item **支持科学计数法**：
-        \begin{itemize}
-            \item 表达式中的数字可使用科学计数法表示，例如 `1.2e3` 等价于 `1200`。
-            \item 科学计数法支持负指数，例如 `1e-3` 等价于 `0.001`。
-        \end{itemize}
-    \item **负数处理**：
-        \begin{itemize}
-            \item 负数允许以 `-` 开头，例如 `-2.1`。
-            \item 负数也可以出现在括号中，例如 `(1+-2)`。
-            \item 连续符号如 `1++2`、`1+--2` 属于非法表达式。
-        \end{itemize}
-    \item **非法输入处理**：
-        \begin{itemize}
-            \item 非法字符（如 `abc+1`）会被标记为 \texttt{ILLEGAL}。
-            \item 括号不匹配（如 `(1+2` 或 `1+2)`）会被标记为 \texttt{ILLEGAL}。
-            \item 连续运算符（如 `1++2`）会被标记为 \texttt{ILLEGAL}。
-            \item 除数为零（如 `1/0`）会被标记为 \texttt{ILLEGAL}。
-        \end{itemize}
-\end{enumerate}
-
-\subsection{支持的特殊情况}
 \begin{itemize}
-    \item **小数**：支持小数运算，例如 `1.5+2.25`。
-    \item **嵌套括号**：支持多层括号嵌套，例如 `(1+(2*3))*4`。
-    \item **空格处理**：输入表达式中的空格会被忽略，例如 `1 + 2` 等价于 `1+2`。
-    \item **科学计数法的错误检测**：如 `1+e3` 或 `1.2e` 被标记为 \texttt{ILLEGAL}。
+    \item 支持四则运算（加、减、乘、除）以及括号嵌套。
+    \item 支持小数和科学计数法（例如 $1.5+2.25$ 和 $1.2e3-1e2$）。
+    \item 对非法表达式能够准确识别，并输出 \texttt{ILLEGAL}。
+    \item 防止计算中的特殊错误，如除数为零或括号不匹配。
+    \item 提供交互式用户输入接口，能够实时计算结果或提示错误。
 \end{itemize}
 
 \section{需求分析}
