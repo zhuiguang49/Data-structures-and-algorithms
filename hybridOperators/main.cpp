@@ -1,74 +1,38 @@
 #include "expression_evaluator.h"
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <string>
 
-// 运行测试用例
-void runTestCases() {
-    std::vector<std::string> testCases = {
-        // 基本运算
-        "1+2",              // 3
-        "1-2",              // -1
-        "2*3",              // 6
-        "6/2",              // 3
+// 从文件读取表达式
+void calculateFromFile(const std::string& fileName) {
+    std::ifstream inputFile(fileName);
+    if (!inputFile) {
+        std::cerr << "Error: Unable to open file " << fileName << std::endl;
+        return;
+    }
 
-        // 运算符优先级和括号
-        "1+2*3",            // 7
-        "(1+2)*3",          // 9
-        "1+(2*3)",          // 7
-        "(1+(2*3))*4",      // 28
+    std::cout << "\nCalculating expressions from file: " << fileName << "\n" << std::endl;
 
-        // 小数
-        "1.5+2.25",         // 3.75
-        "0.1*0.2",          // 0.02
-        "2.5/0.5",          // 5
+    std::string line;
+    while (std::getline(inputFile, line)) {
+        // 忽略空行
+        if (line.empty()) continue;
 
-        // 负数
-        "-1+2",             // 1
-        "1+(-2)",           // -1
-        "-1*(-2)",          // 2
-        "1-(-2)",           // 3
-
-        // 科学计数法
-        "1e3+2",            // 1002
-        "1.2e3-1e2",        // 1100
-        "1e-3*1e3",         // 1
-        "2.5e2/5",          // 50
-
-        // 负数与连续运算符检测
-        "1+-2.1",           // -1.1
-        "1++2.1",           // ILLEGAL
-        "(1+-2)*3",         // -3
-        "-1+(-2.1)",        // -3.1
-
-        // 边界情况
-        "0+0",              // 0
-        "1/3",              // 0.333333...
-        "1/(1+1)",          // 0.5
-
-        // 错误情况
-        "1++2",             // ILLEGAL
-        "1+2*",             // ILLEGAL
-        "(1+2",             // ILLEGAL
-        "1+2)",             // ILLEGAL
-        "1/0",              // ILLEGAL (division by zero)
-        "1..2+3",           // ILLEGAL
-        "abc+1",            // ILLEGAL
-    };
-
-    std::cout << "Running predefined test cases:\n" << std::endl;
-    for (const auto& testCase : testCases) {
         Calculator calc;
-        calc.setExpression(testCase);
+        calc.setExpression(line);
         calc.calculate();
-        std::cout << "Expression: " << testCase 
+        std::cout << "Expression: " << line
                   << " -> Result: " << calc.getResult() << std::endl;
     }
+
+    inputFile.close();
 }
 
 int main() {
-    // 运行预定义的测试用例
-    runTestCases();
+    // 运行文件输入的计算
+    calculateFromFile("scientific.in");
+    calculateFromFile("negative.in");
 
     // 用户交互模式
     std::cout << "\nInteractive mode:\n" << std::endl;
